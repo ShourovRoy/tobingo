@@ -2,7 +2,7 @@
 
 [![Go Version](https://img.shields.io/badge/Go-1.18+-blue.svg)](https://golang.org)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/yourusername/tobingo)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/ShourovRoy/tobingo)
 
 > A blazingly fast, lightweight HTTP router for Go with intuitive path parameter support. Built for developers who want simplicity without sacrificing performance.
 
@@ -21,7 +21,7 @@
 ### Installation
 
 ```bash
-go get github.com/yourusername/tobingo
+go get github.com/ShourovRoy/tobingo
 ```
 
 ### Basic Usage
@@ -32,7 +32,7 @@ package main
 import (
     "fmt"
     "net/http"
-    "github.com/yourusername/tobingo"
+    "github.com/ShourovRoy/tobingo"
 )
 
 func main() {
@@ -62,7 +62,7 @@ import (
     "fmt"
     "net/http"
     "time"
-    "github.com/yourusername/tobingo"
+    "github.com/ShourovRoy/tobingo"
 )
 
 // User represents a user in our system
@@ -89,10 +89,10 @@ func main() {
     // API routes with path parameters
     router.GET("/api/users/:id", getUserHandler)
     router.GET("/api/users/:id/profile", getUserProfileHandler)
-    
+
     // Complex nested parameters
     router.GET("/api/v:version/users/:userId/posts/:postId", getPostHandler)
-    
+
     // Static routes (exact match)
     router.GET("/health", healthCheckHandler)
     router.GET("/about", aboutHandler)
@@ -107,7 +107,7 @@ func main() {
     fmt.Println("   GET  /api/v:version/users/:userId/posts/:postId")
     fmt.Println("")
     fmt.Println("🌐 Server running on http://localhost:8080")
-    
+
     if err := router.StartServer(":8080"); err != nil {
         fmt.Printf("❌ Server failed to start: %v\n", err)
     }
@@ -120,13 +120,13 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
         "version": "1.0.0",
         "endpoints": []string{
             "GET /health",
-            "GET /about", 
+            "GET /about",
             "GET /api/users/:id",
             "GET /api/users/:id/profile",
             "GET /api/v:version/users/:userId/posts/:postId",
         },
     }
-    
+
     w.Header().Set("Content-Type", "application/json")
     json.NewEncoder(w).Encode(response)
 }
@@ -134,7 +134,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 func getUserHandler(w http.ResponseWriter, r *http.Request) {
     // Extract path parameter
     userID := tobingo.GetParam(r, "id")
-    
+
     if userID == "" {
         http.Error(w, "User ID is required", http.StatusBadRequest)
         return
@@ -155,7 +155,7 @@ func getUserHandler(w http.ResponseWriter, r *http.Request) {
 
 func getUserProfileHandler(w http.ResponseWriter, r *http.Request) {
     userID := tobingo.GetParam(r, "id")
-    
+
     user, exists := users[userID]
     if !exists {
         http.Error(w, "User not found", http.StatusNotFound)
@@ -218,7 +218,7 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
         "name":        "Tobingo Router",
         "description": "A lightweight, fast HTTP router for Go applications",
         "author":      "Your Name",
-        "repository":  "https://github.com/yourusername/tobingo",
+        "repository":  "https://github.com/ShourovRoy/tobingo",
         "license":     "MIT",
         "features": []string{
             "Path parameters",
@@ -235,6 +235,7 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 Tobingo makes it incredibly easy to work with path parameters:
 
 ### Single Parameter
+
 ```go
 router.GET("/users/:id", func(w http.ResponseWriter, r *http.Request) {
     userID := tobingo.GetParam(r, "id")
@@ -245,6 +246,7 @@ router.GET("/users/:id", func(w http.ResponseWriter, r *http.Request) {
 ```
 
 ### Multiple Parameters
+
 ```go
 router.GET("/users/:userId/posts/:postId", func(w http.ResponseWriter, r *http.Request) {
     userID := tobingo.GetParam(r, "userId")
@@ -256,12 +258,13 @@ router.GET("/users/:userId/posts/:postId", func(w http.ResponseWriter, r *http.R
 ```
 
 ### Complex Nested Parameters
+
 ```go
 router.GET("/api/v:version/categories/:category/items/:itemId", func(w http.ResponseWriter, r *http.Request) {
     version := tobingo.GetParam(r, "version")
     category := tobingo.GetParam(r, "category")
     itemID := tobingo.GetParam(r, "itemId")
-    
+
     fmt.Fprintf(w, "API v%s - Category: %s, Item: %s", version, category, itemID)
 })
 
@@ -283,7 +286,7 @@ curl http://localhost:8080/about
 curl http://localhost:8080/api/users/1
 curl http://localhost:8080/api/users/2/profile
 
-# Complex nested parameters  
+# Complex nested parameters
 curl http://localhost:8080/api/v2/users/1/posts/42
 ```
 
@@ -308,20 +311,25 @@ type Rastauter struct {
 ### Methods
 
 #### `NewRastaRouterInitializer() *Rastauter`
+
 Creates a new router instance.
 
 #### `GET(path string, handler http.HandlerFunc)`
+
 Registers a GET route with optional path parameters.
 
 #### `StartServer(port string) error`
+
 Starts the HTTP server on the specified port.
 
 #### `GetParam(r *http.Request, key string) string`
+
 Extracts a path parameter value from the request context.
 
 ## 🔧 Advanced Usage
 
 ### Custom Middleware (Coming Soon)
+
 ```go
 // Future feature - middleware support
 router.Use(loggingMiddleware)
@@ -329,15 +337,16 @@ router.Use(authMiddleware)
 ```
 
 ### Error Handling Pattern
+
 ```go
 router.GET("/api/users/:id", func(w http.ResponseWriter, r *http.Request) {
     userID := tobingo.GetParam(r, "id")
-    
+
     if userID == "" {
         http.Error(w, "Missing user ID", http.StatusBadRequest)
         return
     }
-    
+
     // Your logic here
 })
 ```
@@ -350,7 +359,7 @@ Tobingo is designed for performance:
 BenchmarkRouter-8    	 5000000	       250 ns/op	      32 B/op	       1 allocs/op
 ```
 
-*Benchmarks run on Go 1.21, Intel i7-9750H*
+_Benchmarks run on Go 1.21, Intel i7-9750H_
 
 ## 🤝 Contributing
 
@@ -374,10 +383,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- 📧 Email: support@tobingo.dev
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/tobingo/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/yourusername/tobingo/discussions)
+- 📧 Email: shourovroy2389@gmail.com
+- 🐛 Issues: [GitHub Issues](https://github.com/ShourovRoy/tobingo/issues)
 
 ---
 
-**Made with ❤️ and Go** | [⭐ Star us on GitHub](https://github.com/yourusername/tobingo)
+**Made with ❤️ and Go** | [⭐ Star us on GitHub](https://github.com/ShourovRoy/tobingo/)
